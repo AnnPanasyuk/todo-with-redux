@@ -1,0 +1,7 @@
+dist
+dist/*
+.idea
+.idea/*
+.sass-cache
+.sass-cache/*
+.gitignore
