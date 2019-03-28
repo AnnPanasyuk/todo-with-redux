@@ -1,0 +1,10 @@
+dist
+dist/*
+.idea
+.idea/*
+.sass-cache
+.sass-cache/*
+package.json
+package-lock.json
+.node_modules
+.node_modules/*
