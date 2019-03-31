@@ -6,9 +6,9 @@ module.exports = {
     watch: true,
     watchOptions: {
         ignored: ['node_modules'],
-        poll: 1000
+        poll: 100
     },
-    entry: ['./src/index.js'],
+    entry: ['./src/index.js', './src/styles/main.scss'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -53,7 +53,8 @@ module.exports = {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin(
             {
-                template: "src/index.html"
+                template: "src/index.html",
+
             }
         )
     ]
