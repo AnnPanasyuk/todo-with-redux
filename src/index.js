@@ -1,13 +1,29 @@
-import _ from 'lodash';
-import './styles/main.scss';
+'use strict';
 
-function component() {
-    let element = document.createElement('div');
+import { createStore } from 'redux'
 
-    element.innerHTML = _.join(['Hello', 'webpack', '!'], ' ');
-    element.classList.add('hello');
+let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
-    return element;
-}
+const toggleTodo = (todo) => {
+    todo.completed = !todo.completed;
+    return todo;
+};
 
-document.body.appendChild(component());
+const testToggleTodo = () => {
+    const todoBefore = {
+        id: 0,
+        text: 'Learn Redux',
+        completed: false
+    };
+
+    const todoAfter = {
+        id: 0,
+        text: 'Learn Redux',
+        completed: true
+    };
+
+    expect(toggleTodo(todoBefore)).equal(todoAfter);
+};
+
+testToggleTodo();
+console.log('Test passed');
