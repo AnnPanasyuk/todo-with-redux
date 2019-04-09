@@ -1,5 +1,3 @@
-'use strict';
-
 import { createStore } from 'redux'
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
@@ -22,7 +20,8 @@ const testToggleTodo = () => {
         completed: true
     };
 
-    expect(toggleTodo(todoBefore)).equal(todoAfter);
+    expect(1).to.equal(1);
+    expect(toggleTodo(todoBefore)).to.eql(todoAfter);
 };
 
 testToggleTodo();
