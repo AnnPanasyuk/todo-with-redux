@@ -1,28 +1,157 @@
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux';
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
-const toggleTodo = (todo) => {
-    todo.completed = !todo.completed;
-    return todo;
+const todo = (state = [], action) => {
+  switch (action.type) {
+      case 'ADD_TODO':
+          return {
+              id: action.id,
+              text: action.text,
+              completed: false,
+          };
+
+      case 'TOGGLE_TODO':
+          if (state.id !== action.id) {
+              return state;
+          }
+          return {
+              ...state,
+              completed: !state.completed,
+          };
+
+      default:
+          return state;
+  }
+};
+
+
+const todos = (state = [], action) => {
+    switch (action.type) {
+        case 'ADD_TODO':
+            return [
+                ...state,
+                todo(undefined, action),
+            ];
+
+        case 'TOGGLE_TODO':
+            return state.map(
+                (t) => todo(t, action)
+            );
+
+        default:
+            return state;
+    }
+
+};
+
+
+const visibilityFilter = (
+    state = 'SHOW_ALL',
+    action
+) => {
+    switch (action.type) {
+        case 'SET_VISIBILITY_FILTER':
+            return action.filter;
+
+        default:
+            return state;
+    }
+};
+
+
+const todoApp = combineReducers({
+    todos,
+    visibilityFilter,
+
+});
+
+const testAddTodo  = () => {
+    const stateBefore = [];
+    const action = {
+        type: 'ADD_TODO',
+        id: 0,
+        text: 'Learn Redux',
+    };
+    const stateAfter = [
+        {
+            id: 0,
+            text: 'Learn Redux',
+            completed: false,
+        }
+    ];
+
+    expect(
+        todos(stateBefore, action)
+    ).to.eql(stateAfter);
 };
 
 const testToggleTodo = () => {
-    const todoBefore = {
-        id: 0,
-        text: 'Learn Redux',
-        completed: false
+    const stateBefore = [
+        {
+            id: 0,
+            text: '111',
+            completed: false,
+        },
+        {
+            id: 1,
+            text: '222',
+            completed: false,
+        }
+    ];
+
+    const action = {
+        type: 'TOGGLE_TODO',
+        id: 1,
     };
 
-    const todoAfter = {
-        id: 0,
-        text: 'Learn Redux',
-        completed: true
-    };
+    const stateAfter = [
+        {
+            id: 0,
+            text: '111',
+            completed: false,
+        },
+        {
+            id: 1,
+            text: '222',
+            completed: true,
+        }
+    ];
 
-    expect(1).to.equal(1);
-    expect(toggleTodo(todoBefore)).to.eql(todoAfter);
+    expect(
+        todos(stateBefore, action)
+    ).to.eql(stateAfter);
 };
 
+testAddTodo();
 testToggleTodo();
+
 console.log('Test passed');
+
+const store = createStore(todoApp);
+console.log(store.getState());
+
+store.dispatch({
+    id: 1,
+    text: 'Some text',
+    type: 'ADD_TODO'
+});
+console.log(store.getState());
+
+store.dispatch({
+    id: 1,
+    text: 'Some text',
+    type: 'TOGGLE_TODO'
+});
+console.log(store.getState());
+
+store.dispatch({
+    id: 1,
+    text: 'Some text',
+    type: 'ADD_TODO'
+});
+store.dispatch({
+    type: 'SET_VISIBILITY_FILTER',
+    filter: 'SHOW_COMPLETED'
+});
+console.log(store.getState());
