@@ -1,4 +1,5 @@
 import { createStore, combineReducers } from 'redux';
+import { Component, ReactDOM } from 'react';
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
@@ -171,3 +172,45 @@ store.dispatch({
     filter: 'SHOW_COMPLETED'
 });
 console.log(store.getState());
+
+// const {Component} = React;
+
+let nextTodoId = 0;
+
+class TodoApp extends Component {
+    render() {
+        return (
+            <div>
+                <button onclick={() => {
+                    store.dispatch({
+                        type: 'ADD_TODO',
+                        text: 'Test',
+                        id: nextTodoId++,
+                    })
+                }}>
+                    Add todo
+                </button>
+                <ul>
+                {this.props.todos.map(todo =>
+                    <li>
+                        {todo.text}
+                    </li>
+                )}
+                </ul>
+            </div>
+        )
+    }
+
+}
+
+const todoRender = () => {
+    ReactDOM.render(
+        <TodoApp
+            todos={store.getState().todos}
+        />,
+        document.getElementById('root')
+    )
+};
+
+store.subscribe(todoRender);
+todoRender();
