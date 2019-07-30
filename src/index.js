@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux';
-import { Component, ReactDOM } from 'react';
+import ReactDOM from 'react-dom'
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
@@ -173,7 +173,8 @@ store.dispatch({
 });
 console.log(store.getState());
 
-// const {Component} = React;
+let React = require('react');
+const { Component } = React;
 
 let nextTodoId = 0;
 
