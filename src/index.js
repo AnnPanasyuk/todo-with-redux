@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
+// todo reducer
 const todo = (state = [], action) => {
   switch (action.type) {
       case 'ADD_TODO':
@@ -26,7 +27,7 @@ const todo = (state = [], action) => {
   }
 };
 
-
+// todos reducer
 const todos = (state = [], action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -46,7 +47,7 @@ const todos = (state = [], action) => {
 
 };
 
-
+// visibility reducer
 const visibilityFilter = (
     state = 'SHOW_ALL',
     action
@@ -146,32 +147,27 @@ testToggleTodo();
 console.log('Test passed');
 
 const store = createStore(todoApp);
-console.log(store.getState());
-
-store.dispatch({
-    id: 1,
-    text: 'Some text',
-    type: 'ADD_TODO'
-});
-console.log(store.getState());
-
-store.dispatch({
-    id: 1,
-    text: 'Some text',
-    type: 'TOGGLE_TODO'
-});
-console.log(store.getState());
-
-store.dispatch({
-    id: 1,
-    text: 'Some text',
-    type: 'ADD_TODO'
-});
-store.dispatch({
-    type: 'SET_VISIBILITY_FILTER',
-    filter: 'SHOW_COMPLETED'
-});
-console.log(store.getState());
+// console.log(store.getState());
+//
+// store.dispatch({
+//     id: 1,
+//     text: 'Some text',
+//     type: 'ADD_TODO'
+// });
+// console.log(store.getState());
+//
+// store.dispatch({
+//     id: 1,
+//     text: 'Some text',
+//     type: 'TOGGLE_TODO'
+// });
+// console.log(store.getState());
+//
+// store.dispatch({
+//     type: 'SET_VISIBILITY_FILTER',
+//     filter: 'SHOW_COMPLETED'
+// });
+// console.log(store.getState());
 
 let React = require('react');
 const { Component } = React;
@@ -182,18 +178,37 @@ class TodoApp extends Component {
     render() {
         return (
             <div>
-                <button onclick={() => {
+                <input ref={node => {
+                    this.input = node;
+                }}
+                />
+                <button onClick={() => {
                     store.dispatch({
                         type: 'ADD_TODO',
-                        text: 'Test',
+                        text: this.input.value,
                         id: nextTodoId++,
-                    })
+                    });
+                    this.input.value = '';
                 }}>
                     Add todo
                 </button>
                 <ul>
                 {this.props.todos.map(todo =>
-                    <li>
+                    <li
+                        key={todo.id}
+                        onClick={() => {
+                            store.dispatch({
+                                type: 'TOGGLE_TODO',
+                                id: todo.id
+                            });
+                        }}
+                        style={{
+                            textDecoration:
+                                todo.completed ?
+                                    'line-through' :
+                                    'none'
+                        }}
+                    >
                         {todo.text}
                     </li>
                 )}
