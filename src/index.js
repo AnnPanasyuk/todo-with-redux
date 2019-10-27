@@ -3,17 +3,25 @@ import ReactDOM from 'react-dom'
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
+// Constants block
+const ADD_TODO = 'ADD_TODO';
+const TOGGLE_TODO = 'TOGGLE_TODO';
+const SHOW_ALL = 'SHOW_ALL';
+const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
+const SHOW_ACTIVE = 'SHOW_ACTIVE';
+const SHOW_COMPLETED = 'SHOW_COMPLETED';
+
 // todo reducer
 const todo = (state = [], action) => {
   switch (action.type) {
-      case 'ADD_TODO':
+      case ADD_TODO:
           return {
               id: action.id,
               text: action.text,
               completed: false,
           };
 
-      case 'TOGGLE_TODO':
+      case TOGGLE_TODO:
           if (state.id !== action.id) {
               return state;
           }
@@ -30,13 +38,13 @@ const todo = (state = [], action) => {
 // todos reducer
 const todos = (state = [], action) => {
     switch (action.type) {
-        case 'ADD_TODO':
+        case ADD_TODO:
             return [
                 ...state,
                 todo(undefined, action),
             ];
 
-        case 'TOGGLE_TODO':
+        case TOGGLE_TODO:
             return state.map(
                 (t) => todo(t, action)
             );
@@ -49,11 +57,11 @@ const todos = (state = [], action) => {
 
 // visibility reducer
 const visibilityFilter = (
-    state = 'SHOW_ALL',
+    state = SHOW_ALL,
     action
 ) => {
     switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
+        case SET_VISIBILITY_FILTER:
             return action.filter;
 
         default:
@@ -87,7 +95,7 @@ const todoApp = combineReducers({
 const testAddTodo  = () => {
     const stateBefore = [];
     const action = {
-        type: 'ADD_TODO',
+        type: ADD_TODO,
         id: 0,
         text: 'Learn Redux',
     };
@@ -119,7 +127,7 @@ const testToggleTodo = () => {
     ];
 
     const action = {
-        type: 'TOGGLE_TODO',
+        type: TOGGLE_TODO,
         id: 1,
     };
 
@@ -172,7 +180,7 @@ const store = createStore(todoApp);
 let React = require('react');
 const { Component } = React;
 
-const filterLink = ({
+const FilterLink = ({
     filter,
     currentFilter,
     children
@@ -185,7 +193,7 @@ const filterLink = ({
          onClick={e => {
             e.preventDefault();
             store.dispatch({
-                type: 'SET_VISIBILITY_FILTER',
+                type: SET_VISIBILITY_FILTER,
                 filter,
             });
          }}
@@ -195,18 +203,52 @@ const filterLink = ({
     );
 };
 
+const Todo = ({
+    onClick,
+    completed,
+    text
+}) => (
+    <li
+        key={todo.id}
+        onClick={onClick}
+        style={{
+            textDecoration:
+                completed ?
+                    'line-through' :
+                    'none'
+        }}
+    >
+        {text}
+    </li>
+);
+
+const TodoList = ({
+    todos,
+    onTodoClick,
+}) => (
+  <ul>
+      {todos.map(todo =>
+          <Todo
+            key={todo.id}
+            {...todo}
+            onClick={() => onTodoClick(todo.id)}
+          />
+      )}
+  </ul>
+);
+
 const getVisibilityTodos = (
     todos,
     filter
 ) => {
     switch (filter) {
-        case 'SHOW_ALL':
+        case SHOW_ALL:
             return todos;
-        case 'SHOW_COMPLETED':
+        case SHOW_COMPLETED:
             return todos.filter(
                 t => t.completed
             );
-        case 'SHOW_ACTIVE':
+        case SHOW_ACTIVE:
             return todos.filter(
                 t => !t.completed
             );
@@ -235,7 +277,7 @@ class TodoApp extends Component {
                 />
                 <button onClick={() => {
                     store.dispatch({
-                        type: 'ADD_TODO',
+                        type: ADD_TODO,
                         text: this.input.value,
                         id: nextTodoId++,
                     });
@@ -243,50 +285,38 @@ class TodoApp extends Component {
                 }}>
                     Add todo
                 </button>
-                <ul>
-                {visibleTodos.map(todo =>
-                    <li
-                        key={todo.id}
-                        onClick={() => {
-                            store.dispatch({
-                                type: 'TOGGLE_TODO',
-                                id: todo.id
-                            });
-                        }}
-                        style={{
-                            textDecoration:
-                                todo.completed ?
-                                    'line-through' :
-                                    'none'
-                        }}
-                    >
-                        {todo.text}
-                    </li>
-                )}
-                </ul>
+                <TodoList
+                    todos={visibleTodos}
+                    onTodoClick={id =>
+                        store.dispatch({
+                            type: TOGGLE_TODO,
+                            id
+                        })
+                    }
+                />
                 <p>
                     Show:
                     {' '}
-                    <filterLink
-                        filter='SHOW_ALL'
+                    <FilterLink
+                        filter={SHOW_ALL}
                         currentFilter={visibilityFilter}
                     >
                         All
-                    </filterLink>
+                    </FilterLink>
                     {' '}
-                    <filterLink
-                        filter='SHOW_ACTIVE'
+                    <FilterLink
+                        filter={SHOW_ACTIVE}
                         currentFilter={visibilityFilter}
                     >
                         Active
-                    </filterLink>
+                    </FilterLink>
                     {' '}
-                    <filterLink
-                        filter='SHOW_COMPLETED'
+                    <FilterLink
+                        filter={SHOW_COMPLETED}
                         currentFilter={visibilityFilter}
                     >
                         Completed
-                    </filterLink>
+                    </FilterLink>
                 </p>
             </div>
         )
