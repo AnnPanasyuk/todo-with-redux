@@ -1,6 +1,8 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
     watch: true,
@@ -13,11 +15,28 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
-    mode: 'none',
+    mode: 'production',
+    optimization: {
+        minimizer: [
+            // new TerserPlugin({}),
+            // new OptimizeCSSAssetsPlugin({}),
+        ],
+        splitChunks: {
+            chunks: 'all',
+            // cacheGroups: {
+            //     styles: {
+            //         name: 'main',
+            //         test: /\.css$/,
+            //         chunks: 'all',
+            //         enforce: true,
+            //     },
+            // },
+        }
+    },
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: /\.(scss|css)$/,
                 use: [
                     {
                         loader: 'file-loader',
@@ -28,6 +47,9 @@ module.exports = {
                     {
                         loader: 'extract-loader'
                     },
+                    // {
+                    //     loader: MiniCssExtractPlugin.loader,
+                    // },
                     {
                         loader: 'css-loader',
                     },
@@ -43,16 +65,31 @@ module.exports = {
                         loader: 'url-loader',
                     }
                 ]
+            },
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: ['@babel/plugin-proposal-object-rest-spread']
+                    }
+                }
             }
         ]
     },
     plugins: [
-        // new CleanWebpackPlugin(),
         new HtmlWebpackPlugin(
             {
                 template: "src/index.html",
 
             }
-        )
+        ),
+        // new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // all options are optional
+            // filename: 'src/styles/main.scss',
+        // }),
     ]
 };
