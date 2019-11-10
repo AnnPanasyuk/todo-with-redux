@@ -1,7 +1,6 @@
 import { createStore, combineReducers } from 'redux';
 import ReactDOM from 'react-dom'
 import PropTypes from "prop-types";
-// import { Provider } from "react-redux";
 import React from "react";
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
