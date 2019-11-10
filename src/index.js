@@ -1,8 +1,8 @@
 import { createStore, combineReducers } from 'redux';
 import ReactDOM from 'react-dom'
-import React from "react";
 import PropTypes from "prop-types";
-import { Provider } from "react-redux";
+// import { Provider } from "react-redux";
+import React from "react";
 
 let expect = (typeof require === 'undefined') ? chai.expect : require('chai').expect;
 
@@ -398,24 +398,26 @@ const TodoApp = () => (
 );
 
 // own Provider Class
-// class Provider extends Component {
-//     getChildContext() {
-//         return {
-//             store: this.props.store,
-//         }
-//     }
-//     render() {
-//         return this.props.children;
-//     }
-// }
-//
-// Provider.childContextTypes = {
-//     store: PropTypes.object
-// };
+class Provider extends Component {
+    getChildContext() {
+        return {
+            store: this.props.store,
+        }
+    }
+    render() {
+        return this.props.children;
+    }
+}
+
+Provider.childContextTypes = {
+    store: PropTypes.object
+};
+
+const store = createStore(todoApp);
 
 ReactDOM.render(
-    <Provider store={createStore(todoApp)}>
+    <Provider store={store}>
         <TodoApp />
     </Provider>,
     document.getElementById('root'),
-)
+);
