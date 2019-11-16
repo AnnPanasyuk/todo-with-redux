@@ -1,0 +1,25 @@
+.todo-app {
+  width: 80%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-areas:
+  "add sort"
+  "list sort";
+  grid-template-columns: 1.3fr .7fr;
+  grid-gap: 12px;
+}
+
+.add-container {
+  grid-area: add;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-container {
+  grid-area: list;
+}
+
+.sort-container {
+  grid-area: sort;
+}

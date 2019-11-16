@@ -247,6 +247,7 @@ const Todo = ({
     text
 }) => (
     <li
+        className={'todo-item'}
         key={todo.id}
         onClick={onClick}
         style={{
@@ -264,26 +265,38 @@ const TodoList = ({
     todos,
     onTodoClick,
 }) => (
-  <ul>
-      {todos.map(todo =>
-          <Todo
-            key={todo.id}
-            {...todo}
-            onClick={() => onTodoClick(todo.id)}
-          />
-      )}
-  </ul>
+    <div className={'list-container'}>
+        <ul className={'todo-items'}>
+            {todos.map(todo =>
+                <Todo
+                    key={todo.id}
+                    {...todo}
+                    onClick={() => onTodoClick(todo.id)}
+                />
+            )}
+        </ul>
+    </div>
+
 );
 
 const AddTodo = (props, {store}) => {
     let input;
     return (
-        <div>
-            <input ref={node => {
-                input = node;
-            }}
-            />
-            <button onClick={() => {
+        <div className={'add-container'}>
+            <div className={'input-container'}>
+                <label className={'label'}>
+                    Todo name
+                </label>
+                <input
+                    className={'input'}
+                    ref={node => {
+                        input = node;
+                    }}
+                />
+            </div>
+            <button
+                className={'add-button'}
+                onClick={() => {
                 store.dispatch({
                     type: ADD_TODO,
                     id: nextTodoId++,
@@ -303,27 +316,29 @@ AddTodo.contextTypes = {
 };
 
 const Footer = () => (
-    <p>
-        Show:
-        {' '}
-        <FilterLink
-            filter={SHOW_ALL}
-        >
-            All
-        </FilterLink>
-        {' '}
-        <FilterLink
-            filter={SHOW_ACTIVE}
-        >
-            Active
-        </FilterLink>
-        {' '}
-        <FilterLink
-            filter={SHOW_COMPLETED}
-        >
-            Completed
-        </FilterLink>
-    </p>
+    <div className={'sort-container'}>
+        <p>
+            Show:
+            {' '}
+            <FilterLink
+                filter={SHOW_ALL}
+            >
+                All
+            </FilterLink>
+            {' '}
+            <FilterLink
+                filter={SHOW_ACTIVE}
+            >
+                Active
+            </FilterLink>
+            {' '}
+            <FilterLink
+                filter={SHOW_COMPLETED}
+            >
+                Completed
+            </FilterLink>
+        </p>
+    </div>
 );
 
 const getVisibilityTodos = (
@@ -389,7 +404,7 @@ VisibleTodoList.contextTypes = {
 let nextTodoId = 0;
 
 const TodoApp = () => (
-    <div>
+    <div className={'todo-app'}>
         <AddTodo />
         <VisibleTodoList />
         <Footer />
