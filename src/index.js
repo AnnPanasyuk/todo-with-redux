@@ -190,14 +190,16 @@ const Link = ({
         return <span> {children} </span>
     }
     return (
-      <a href='#'
-         onClick={e => {
-            e.preventDefault();
-            onClick();
-         }}
-      >
-          {children}
-      </a>
+        <a
+            className={'active-link'}
+            href='#'
+            onClick={e => {
+               e.preventDefault();
+             onClick();
+          }}
+        >
+            {children}
+        </a>
     );
 };
 
@@ -266,7 +268,7 @@ const TodoList = ({
     onTodoClick,
 }) => (
     <div className={'list-container'}>
-        <ul className={'todo-items'}>
+        <ol className={'todo-items'}>
             {todos.map(todo =>
                 <Todo
                     key={todo.id}
@@ -274,7 +276,7 @@ const TodoList = ({
                     onClick={() => onTodoClick(todo.id)}
                 />
             )}
-        </ul>
+        </ol>
     </div>
 
 );
@@ -288,6 +290,7 @@ const AddTodo = (props, {store}) => {
                     Todo name
                 </label>
                 <input
+                    placeholder={'Write your new todo name'}
                     className={'input'}
                     ref={node => {
                         input = node;
@@ -317,27 +320,39 @@ AddTodo.contextTypes = {
 
 const Footer = () => (
     <div className={'sort-container'}>
-        <p>
-            Show:
+        <div className={'filter-links'}>
+            <div className={'show-text-container'}>
+                <span className={'show-text'}>
+                    Show:
+                </span>
+            </div>
             {' '}
-            <FilterLink
-                filter={SHOW_ALL}
-            >
-                All
-            </FilterLink>
-            {' '}
-            <FilterLink
-                filter={SHOW_ACTIVE}
-            >
-                Active
-            </FilterLink>
-            {' '}
-            <FilterLink
-                filter={SHOW_COMPLETED}
-            >
-                Completed
-            </FilterLink>
-        </p>
+            <ol className={'sort-items'}>
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_ALL}
+                    >
+                        All
+                    </FilterLink>
+                </li>
+                {' '}
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_ACTIVE}
+                    >
+                        Active
+                    </FilterLink>
+                </li>
+                {' '}
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_COMPLETED}
+                    >
+                        Completed
+                    </FilterLink>
+                </li>
+            </ol>
+        </div>
     </div>
 );
 
