@@ -1,0 +1,118 @@
+$add-btn-width: 100px;
+
+.todo-app-container {
+  background-color: #f2f5fa;
+  padding: 32px 0;
+  height: 100vh;
+}
+
+.todo-app {
+  border: 1px solid #dfe3ec;
+  box-shadow: 0 4px 16px 0 rgba(3,3,3,.1);
+  padding: 24px;
+  width: 80%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-areas:
+  "add sort"
+  "list sort";
+  grid-template-columns: 1.3fr .7fr;
+  grid-gap: 12px 48px;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.add-container {
+  grid-area: add;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - #{$add-btn-width} - 24px);
+
+    .label {
+      color: #6B7EA7;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .input {
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      background-color: #f2f5fa;
+      color: #050A16;
+      &::placeholder {
+        color: #AAB5CC;
+      }
+    }
+  }
+
+  .add-button {
+    padding: 12px;
+    background-color: #2055D1;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    transition: .3s;
+    width: $add-btn-width;
+    &:hover {
+      opacity: .9;
+    }
+  }
+}
+
+.list-container {
+  grid-area: list;
+
+  .todo-items {
+    list-style: circle inside;
+  }
+
+  .todo-item {
+    color: #050A16;
+    font-size: 20px;
+    padding: 4px;
+
+    .filter-links {
+      margin: 0;
+    }
+  }
+}
+
+.sort-container {
+  grid-area: sort;
+
+  .show-text-container {
+    margin-bottom: 4px;
+
+    .show-text {
+      font-size: 20px;
+      color: #050A16;
+    }
+  }
+
+  .sort-items {
+    list-style: circle inside;
+
+    .sort-item {
+      color: #050A16;
+      font-size: 16px;
+      margin: 4px 0;
+    }
+
+    .active-link {
+      color: #2055D1;
+      transition: .3s;
+      &:hover {
+        opacity: .7;
+      }
+    }
+  }
+
+}
+

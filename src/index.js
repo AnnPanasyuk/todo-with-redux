@@ -190,14 +190,16 @@ const Link = ({
         return <span> {children} </span>
     }
     return (
-      <a href='#'
-         onClick={e => {
-            e.preventDefault();
-            onClick();
-         }}
-      >
-          {children}
-      </a>
+        <a
+            className={'active-link'}
+            href='#'
+            onClick={e => {
+               e.preventDefault();
+             onClick();
+          }}
+        >
+            {children}
+        </a>
     );
 };
 
@@ -247,6 +249,7 @@ const Todo = ({
     text
 }) => (
     <li
+        className={'todo-item'}
         key={todo.id}
         onClick={onClick}
         style={{
@@ -264,26 +267,39 @@ const TodoList = ({
     todos,
     onTodoClick,
 }) => (
-  <ul>
-      {todos.map(todo =>
-          <Todo
-            key={todo.id}
-            {...todo}
-            onClick={() => onTodoClick(todo.id)}
-          />
-      )}
-  </ul>
+    <div className={'list-container'}>
+        <ol className={'todo-items'}>
+            {todos.map(todo =>
+                <Todo
+                    key={todo.id}
+                    {...todo}
+                    onClick={() => onTodoClick(todo.id)}
+                />
+            )}
+        </ol>
+    </div>
+
 );
 
 const AddTodo = (props, {store}) => {
     let input;
     return (
-        <div>
-            <input ref={node => {
-                input = node;
-            }}
-            />
-            <button onClick={() => {
+        <div className={'add-container'}>
+            <div className={'input-container'}>
+                <label className={'label'}>
+                    Todo name
+                </label>
+                <input
+                    placeholder={'Write your new todo name'}
+                    className={'input'}
+                    ref={node => {
+                        input = node;
+                    }}
+                />
+            </div>
+            <button
+                className={'add-button'}
+                onClick={() => {
                 store.dispatch({
                     type: ADD_TODO,
                     id: nextTodoId++,
@@ -303,27 +319,41 @@ AddTodo.contextTypes = {
 };
 
 const Footer = () => (
-    <p>
-        Show:
-        {' '}
-        <FilterLink
-            filter={SHOW_ALL}
-        >
-            All
-        </FilterLink>
-        {' '}
-        <FilterLink
-            filter={SHOW_ACTIVE}
-        >
-            Active
-        </FilterLink>
-        {' '}
-        <FilterLink
-            filter={SHOW_COMPLETED}
-        >
-            Completed
-        </FilterLink>
-    </p>
+    <div className={'sort-container'}>
+        <div className={'filter-links'}>
+            <div className={'show-text-container'}>
+                <span className={'show-text'}>
+                    Show:
+                </span>
+            </div>
+            {' '}
+            <ol className={'sort-items'}>
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_ALL}
+                    >
+                        All
+                    </FilterLink>
+                </li>
+                {' '}
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_ACTIVE}
+                    >
+                        Active
+                    </FilterLink>
+                </li>
+                {' '}
+                <li className={'sort-item'}>
+                    <FilterLink
+                        filter={SHOW_COMPLETED}
+                    >
+                        Completed
+                    </FilterLink>
+                </li>
+            </ol>
+        </div>
+    </div>
 );
 
 const getVisibilityTodos = (
@@ -389,7 +419,7 @@ VisibleTodoList.contextTypes = {
 let nextTodoId = 0;
 
 const TodoApp = () => (
-    <div>
+    <div className={'todo-app'}>
         <AddTodo />
         <VisibleTodoList />
         <Footer />
